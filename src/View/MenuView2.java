@@ -1,10 +1,7 @@
 package View;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,32 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.SpringLayout;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import Controller.ShoppingCartController;
 
 public class MenuView2 {
 	private JFrame frmShoppingcart;
-
-	/**
-	 * Launch the application.
-	 */
-	/*in the Main.java
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MenuView window = new MenuView();
-					window.frmShoppingcart.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	*/
-
 	/**
 	 * Create the application.
 	 */
@@ -54,7 +29,6 @@ public class MenuView2 {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private ShoppingCartController scc;
 	private JLabel lblShopItem;
 	private DefaultListModel<String> itemModel;
 	private JList<String> itemList;
@@ -70,7 +44,6 @@ public class MenuView2 {
 	private JButton btnBill;
 	private JButton btnExit;
 	private void initialize() {
-		scc = new ShoppingCartController();
 		frmShoppingcart = new JFrame();
 		frmShoppingcart.setTitle("ShoppingCart");
 		frmShoppingcart.setBounds(100, 100, 804, 391);
@@ -150,114 +123,102 @@ public class MenuView2 {
 		springLayout.putConstraint(SpringLayout.EAST, btnExit, -10, SpringLayout.EAST, frmShoppingcart.getContentPane());
 		frmShoppingcart.getContentPane().add(btnExit);
 		
-		//以上是版面設計，以下是動作
-		button_del.setEnabled(false);//先關起來等購物車有物品再打開
-		btnCheckOut.setEnabled(false);//先關起來等購物車有物品再打開
-		btnBill.setEnabled(false);//等結帳後才有帳單
-		//顯示商品列表
-		for(String str:scc.showShopItem()){
-			itemModel.addElement(str);
-		}
-		//當選擇商品時，在Label顯示價格
-		itemList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				lblPrice.setText("Price : " + scc.getItemPrice(itemList.getSelectedIndex()) + " NTD");
-			}
-		});
-		itemList.setSelectedIndex(0);//預設選擇第一個
-		
-		comboBox.addItem(1);//批次數量1~5
+		//批次數量1~5
+		comboBox.addItem(1);
 		comboBox.addItem(2);
 		comboBox.addItem(3);
 		comboBox.addItem(4);
 		comboBox.addItem(5);
-		showCartItem();
-		
-		//添加物品至購物車
-		button_buy.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int selectIndex = itemList.getSelectedIndex();
-				int num = (int)comboBox.getSelectedItem();
-				addToCart(selectIndex, num);
-				showCartItem();
-			}
-		});
-		//移除指定購物車商品
-		button_del.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int selectIndex = cartList.getSelectedIndex();
-				int num = (int)comboBox.getSelectedItem();
-				delCartItem(selectIndex - 2, num);
-				showCartItem();
-				cartList.setSelectedIndex(selectIndex);
-				if(cartModel.size() <= 2){
-					button_del.setEnabled(false);//關起來等購物車有物品再打開
-					btnCheckOut.setEnabled(false);//關起來等購物車有物品再打開
-				}
-			}
-		});
-		//移除全部購物車商品
-		btnRemoveallitem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				delCartItemAll();
-				showCartItem();
-			}
-		});
-		//結帳
-		btnCheckOut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				button_buy.setEnabled(false);
-				button_del.setEnabled(false);
-				btnRemoveallitem.setEnabled(false);
-				btnCheckOut.setEnabled(false);
-				btnBill.setEnabled(true);
-				String msg = "The total price is " + scc.getTotalCost() + "NTD.\nThank you and come again.";
-				JOptionPane.showMessageDialog(frmShoppingcart, msg, "Check Out!", JOptionPane.INFORMATION_MESSAGE);
-				scc.chockOut_Bill();
-				try {
-					Runtime.getRuntime().exec("cmd /c start Bill.txt");
-				} catch (IOException e1) {
-					// TODO 自動產生的 catch 區塊
-					e1.printStackTrace();
-				}
-			}
-		});
-		//Bill button
-		btnBill.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Runtime.getRuntime().exec("cmd /c start Bill.txt");
-				} catch (IOException e1) {
-					// TODO 自動產生的 catch 區塊
-					e1.printStackTrace();
-				}
-			}
-		});
-		//exit
-		btnExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
 	}
-	public void showCartItem(){
+	//設計商品列表的商品資料
+	public void addShopItem(String item) {
+		itemModel.addElement(item);
+	}
+	//設定商品列表的監聽器
+	public void addShopListSelectionListener(ListSelectionListener listSelectionListener) {
+		itemList.addListSelectionListener(listSelectionListener);
+	}
+	//取得目前選擇的商品清單index
+	public int  getSelectShopListIndex() {
+		return itemList.getSelectedIndex();
+	}
+	//設定price資訊
+	public void setShopItemPrice(Double price) {
+		lblPrice.setText("Price : " + price + " NTD");
+	}
+	
+	//設定按下>的監聽器
+	public void addButtonBuyActionListener(ActionListener actionListener) {
+		button_buy.addActionListener(actionListener);
+	}
+	
+	//取得批次數量
+	public int getSelectNum() {
+		return comboBox.getItemAt(comboBox.getSelectedIndex()).intValue();
+	}
+	
+	//清空購物車
+	public void carListClear() {
 		cartModel.clear();
-		//顯示購物車列表
-		for(String str:scc.showCartItem()){
-			cartModel.addElement(str);
-		}
 	}
-	public void addToCart(int itemIndex, int num){
-		scc.addToCart(itemIndex, num);
-		button_del.setEnabled(true);
-		btnCheckOut.setEnabled(true);
+	
+	//填入購物車
+	public void addCarItem(String item) {
+		cartModel.addElement(item);
 	}
-	public void delCartItem(int cartItemIndex, int num){
-		scc.removeCartItem(cartItemIndex, num);
+	
+	//設定按下<的監聽器
+	public void addButtonDelActionListener(ActionListener actionListener) {
+		button_del.addActionListener(actionListener);
 	}
-	public void delCartItemAll(){
-		scc.removeCartItemAll();
-		button_del.setEnabled(false);//關起來等購物車有物品再打開
-		btnCheckOut.setEnabled(false);//關起來等購物車有物品再打開
+	
+	//取得選擇的購物車清單index
+	public int getSelectCarListIndex() {
+		return cartList.getSelectedIndex();
+	}
+	
+	//設定按下RemoveAllItem的監聽器
+	public void addRemoveAllItemActionListener(ActionListener actionListener) {
+		btnRemoveallitem.addActionListener(actionListener);
+	}
+	//設定>可否使用
+	public void setButtonBuyEnabled(boolean b) {
+		button_buy.setEnabled(b);
+	}
+	//設定<可否使用
+	public void setButtonDelEnabled(boolean b) {
+		button_del.setEnabled(b);
+	}
+	//設定RemoveAllItem可否使用
+	public void setRemoveAllItemEnabled(boolean b) {
+		btnRemoveallitem.setEnabled(b);
+	}
+	//設定CheckOut可否使用
+	public void setCheckOutEnabled(boolean b) {
+		btnCheckOut.setEnabled(b);
+	}
+	//設定Bill可否使用
+	public void setBillEnabled(boolean b) {
+		btnBill.setEnabled(b);
+	}
+	
+	//設定CheckOut按鈕監聽器
+	public void addCheckOutActionListener(ActionListener actionListener) {
+		btnCheckOut.addActionListener(actionListener);
+	}
+	
+	//顯示結帳訊息框
+	public void showCheckOutMessage(String msg) {
+		JOptionPane.showMessageDialog(frmShoppingcart, msg, "Check Out!", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	//Bill按鈕監聽器
+	public void addBillActionListener(ActionListener actionListener) {
+		btnBill.addActionListener(actionListener);
+	}
+	
+	//設定Exit按鈕監聽器
+	public void addExitActionListener(ActionListener actionListener) {
+		btnExit.addActionListener(actionListener);
 	}
 }
