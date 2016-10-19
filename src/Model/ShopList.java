@@ -15,6 +15,9 @@ public class ShopList implements List{
 		list.remove(index);
 		return item;
 	}
+	public void removeAll() {
+		list.clear();
+	}
 	public int getLength() {
 		return list.size();
 	}
