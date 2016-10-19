@@ -125,6 +125,7 @@ public class Controller {
 			}
 		}
 	}
+	
 	//移除全部的按鈕動作
 	class RemoveAllItemActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
