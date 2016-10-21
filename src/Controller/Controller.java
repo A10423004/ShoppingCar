@@ -51,9 +51,9 @@ public class Controller {
 		//Exit按鈕監聽器
 		menuView2.addExitActionListener(new ExitActionListener());
 		//Bymail按鈕監聽器
-		menuView2.RadioActionListener(new RadioActionListener());
+		menuView2.RbBymailActionListener(new RbBymailActionListener());
 		//Cashondelivery按鈕監聽器
-		menuView2.RadioActionListener1(new RadioActionListener1());
+		menuView2.RbCashondeliveryActionListener(new RbCashondeliveryActionListener());
 		/*監聽器設定結束*/
 		
 		//限制<、CheckOut、Bill按鈕不能點選
@@ -217,7 +217,7 @@ public class Controller {
 	}
 	
 	//Bymail按鈕動作
-	class RadioActionListener implements ActionListener{
+	class RbBymailActionListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			menuView2.rbBｙmailActionPerformed(true);
@@ -226,7 +226,7 @@ public class Controller {
 	}
 	
 	//Cashondelivery按鈕動作
-	class RadioActionListener1 implements ActionListener{
+	class RbCashondeliveryActionListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			menuView2.rbCashondeliveryActionPerformed(true);

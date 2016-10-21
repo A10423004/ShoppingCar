@@ -71,6 +71,6 @@ public class CarList implements List{
 	//get取得Strategy的getTransportPrice()方法
 	public double getStrategy(){
 		return strategy.getTransportPrice();
-		
 	}
+	
 }

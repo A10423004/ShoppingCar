@@ -15,8 +15,6 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JRadioButton;
 import java.awt.*;
-//import java.awt.event.*;
-//import javax.swing.*;
 
 public class MenuView2 {
 	private JFrame frmShoppingcart;
@@ -49,7 +47,7 @@ public class MenuView2 {
 	private JButton btnCheckOut;
 	private JButton btnBill;
 	private JButton btnExit;
-	private JRadioButton rbBｙmail;//郵寄按鈕
+	private JRadioButton rbBymail;//郵寄按鈕
 	private JRadioButton rbCashondelivery;//貨到付款按鈕
 	private TextField textTransportmethod;
 	private JLabel lbTransportmethod;//運送方式顯示
@@ -135,26 +133,28 @@ public class MenuView2 {
 		springLayout.putConstraint(SpringLayout.EAST, btnExit, 0, SpringLayout.EAST, cartList);
 		frmShoppingcart.getContentPane().add(btnExit);
 		
-		rbBｙmail = new JRadioButton("By mail");
-		springLayout.putConstraint(SpringLayout.NORTH, rbBｙmail, 0, SpringLayout.NORTH, lblPrice);
-		springLayout.putConstraint(SpringLayout.WEST, rbBｙmail, 0, SpringLayout.WEST, lblShoppingcart);
-		frmShoppingcart.getContentPane().add(rbBｙmail);
+		rbBymail = new JRadioButton("By mail");
+		springLayout.putConstraint(SpringLayout.EAST, rbBymail, -515, SpringLayout.EAST, frmShoppingcart.getContentPane());
+		frmShoppingcart.getContentPane().add(rbBymail);
 		
 		rbCashondelivery = new JRadioButton("Cash on delivery");
-		springLayout.putConstraint(SpringLayout.NORTH, rbCashondelivery, 0, SpringLayout.NORTH, lblPrice);
-		springLayout.putConstraint(SpringLayout.WEST, rbCashondelivery, 9, SpringLayout.EAST, rbBｙmail);
+		springLayout.putConstraint(SpringLayout.WEST, rbCashondelivery, 7, SpringLayout.EAST, rbBymail);
 		frmShoppingcart.getContentPane().add(rbCashondelivery);
 		
 		lbTransportmethod = new JLabel("Transport Method\uFF1A");
-		springLayout.putConstraint(SpringLayout.NORTH, lbTransportmethod, 13, SpringLayout.SOUTH, rbBｙmail);
-		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethod, 0, SpringLayout.WEST, lblShoppingcart);
+		springLayout.putConstraint(SpringLayout.SOUTH, rbCashondelivery, -3, SpringLayout.NORTH, lbTransportmethod);
+		springLayout.putConstraint(SpringLayout.SOUTH, rbBymail, -3, SpringLayout.NORTH, lbTransportmethod);
+		springLayout.putConstraint(SpringLayout.EAST, lbTransportmethod, -47, SpringLayout.WEST, btnRemoveallitem);
+		springLayout.putConstraint(SpringLayout.NORTH, lbTransportmethod, 30, SpringLayout.SOUTH, cartList);
+		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethod, 1, SpringLayout.WEST, lblShoppingcart);
+		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethod, 47, SpringLayout.NORTH, lblPrice);
 		frmShoppingcart.getContentPane().add(lbTransportmethod);
 		
-		textTransportmethod = new TextField();
+		/*textTransportmethod = new TextField();
 		springLayout.putConstraint(SpringLayout.WEST, textTransportmethod, 6, SpringLayout.EAST, lbTransportmethod);
 		springLayout.putConstraint(SpringLayout.SOUTH, textTransportmethod, 0, SpringLayout.SOUTH, lbTransportmethod);
 		springLayout.putConstraint(SpringLayout.EAST, textTransportmethod, 111, SpringLayout.EAST, lbTransportmethod);
-		frmShoppingcart.getContentPane().add(textTransportmethod);
+		frmShoppingcart.getContentPane().add(textTransportmethod);*/
 		
 		//批次數量1~5
 		comboBox.addItem(1);
@@ -164,7 +164,7 @@ public class MenuView2 {
 		comboBox.addItem(5);
 		//按紐分組
 		ButtonGroup bg = new ButtonGroup();  
-		bg.add(rbBｙmail);
+		bg.add(rbBymail);
 		bg.add(rbCashondelivery);
 		
 	}
@@ -261,23 +261,23 @@ public class MenuView2 {
 	}
 	
 	//rbBymail的按鈕監聽器
-	public void RadioActionListener(ActionListener actionListener) {
-		rbBｙmail.addActionListener(actionListener);
+	public void RbBymailActionListener(ActionListener actionListener) {
+		rbBymail.addActionListener(actionListener);
 	}
 	
 	//rbCashondelivery的按鈕監聽器
-	public void RadioActionListener1(ActionListener actionListener){
+	public void RbCashondeliveryActionListener(ActionListener actionListener){
 		rbCashondelivery.addActionListener(actionListener);
 	}
 	
 	//Get運送方式的按鈕方法
 	public void rbBｙmailActionPerformed(boolean b){
-		rbBｙmail.setEnabled(b);
-		textTransportmethod.setText(rbBｙmail.getText());
+		rbBymail.setEnabled(b);
+		lbTransportmethod.setText("Transport Method：郵寄");
 	}
 	public void rbCashondeliveryActionPerformed(boolean b){
 		rbCashondelivery.setEnabled(b);
-		textTransportmethod.setText(rbCashondelivery.getText());
+		lbTransportmethod.setText("Transport Method：貨到付款");
 	}
 	
 }
