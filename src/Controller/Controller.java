@@ -10,15 +10,22 @@ import javax.swing.event.ListSelectionListener;
 
 import Model.CarList;
 import Model.CartItem;
+import Model.CashondeliveryPrice;
 import Model.Db2;
 import Model.Iterator;
+import Model.MailPrice;
 import Model.ShopList;
+import Model.Strategy;
 import View.MenuView2;
 
 public class Controller {
 	MenuView2 menuView2;
 	ShopList shopList;
 	CarList carList;
+	Strategy strategy;
+	boolean b; 
+	private Strategy transportstrategy;
+	
 	public Controller(MenuView2 menuView2) {
 		this.menuView2 = menuView2;
 		this.menuView2.show();
@@ -43,6 +50,10 @@ public class Controller {
 		menuView2.addBillActionListener(new BillActionListener());
 		//Exit按鈕監聽器
 		menuView2.addExitActionListener(new ExitActionListener());
+		//Bymail按鈕監聽器
+		menuView2.RadioActionListener(new RadioActionListener());
+		//Cashondelivery按鈕監聽器
+		menuView2.RadioActionListener1(new RadioActionListener1());
 		/*監聽器設定結束*/
 		
 		//限制<、CheckOut、Bill按鈕不能點選
@@ -139,6 +150,16 @@ public class Controller {
 	//CheckOut的按鈕動作
 	class CheckOutActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
+			
+			//判斷Strategy的運送方式是哪一種，再把相對應的Strategy new出來，傳進CarList
+			if(b == true){
+				strategy = new MailPrice();
+				carList.setStrategy(strategy);
+			}
+			else{
+				strategy = new CashondeliveryPrice();
+				carList.setStrategy(strategy);
+			}
 			//按鈕全部關閉
 			menuView2.setButtonBuyEnabled(false);
 			menuView2.setButtonDelEnabled(false);
@@ -194,4 +215,23 @@ public class Controller {
 			System.exit(0);
 		}
 	}
+	
+	//Bymail按鈕動作
+	class RadioActionListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			menuView2.rbBｙmailActionPerformed(true);
+			b = true;
+		}
+	}
+	
+	//Cashondelivery按鈕動作
+	class RadioActionListener1 implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			menuView2.rbCashondeliveryActionPerformed(true);
+			b = false;
+		}
+	}
+	
 }

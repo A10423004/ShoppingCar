@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class CarList implements List{
 	ArrayList<CartItem> list;
+	Strategy strategy;
 	public CarList() {
 		list = new ArrayList<CartItem>();
 	}
@@ -52,9 +53,24 @@ public class CarList implements List{
 	//算總價錢
 	public double getTotalCost() {
 		double total = 0.0;
-		for(CartItem item : list){
-			total += item.getPrice() * item.getQuantity();
+		try{
+			for(CartItem item : list){
+				total += item.getPrice() * item.getQuantity();
+			}
+			total += getStrategy();
+		}
+		catch(Exception e){
+			System.out.println("請選擇運送方式!!");
 		}
 		return total;
+	}
+	//set取得Strategy的方法
+	public void setStrategy(Strategy s){
+		this.strategy = s;
+	}
+	//get取得Strategy的getTransportPrice()方法
+	public double getStrategy(){
+		return strategy.getTransportPrice();
+		
 	}
 }
