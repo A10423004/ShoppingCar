@@ -1,6 +1,6 @@
 package Model;
 
-public class CashondeliveryPrice implements Strategy{
+public class CashOnDeliveryPrice implements Strategy{
 	
 	@Override
 	public double getTransportPrice() {

@@ -49,9 +49,8 @@ public class MenuView2 {
 	private JButton btnExit;
 	private JRadioButton rbBymail;//郵寄按鈕
 	private JRadioButton rbCashondelivery;//貨到付款按鈕
-	private TextField textTransportmethod;
-	private JLabel lbTransportmethod;//運送方式顯示
-	private ButtonGroup rbuttonGroup;//群組
+	private JLabel lbTransportmethod;
+	private JLabel lbTransportmethodText;//運送方式顯示
 	
 	private void initialize() {
 		frmShoppingcart = new JFrame();
@@ -142,19 +141,19 @@ public class MenuView2 {
 		frmShoppingcart.getContentPane().add(rbCashondelivery);
 		
 		lbTransportmethod = new JLabel("Transport Method\uFF1A");
+		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethod, -31, SpringLayout.SOUTH, frmShoppingcart.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, rbCashondelivery, -3, SpringLayout.NORTH, lbTransportmethod);
 		springLayout.putConstraint(SpringLayout.SOUTH, rbBymail, -3, SpringLayout.NORTH, lbTransportmethod);
-		springLayout.putConstraint(SpringLayout.EAST, lbTransportmethod, -47, SpringLayout.WEST, btnRemoveallitem);
 		springLayout.putConstraint(SpringLayout.NORTH, lbTransportmethod, 30, SpringLayout.SOUTH, cartList);
+		springLayout.putConstraint(SpringLayout.EAST, lbTransportmethod, -60, SpringLayout.EAST, rbCashondelivery);
 		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethod, 1, SpringLayout.WEST, lblShoppingcart);
-		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethod, 47, SpringLayout.NORTH, lblPrice);
 		frmShoppingcart.getContentPane().add(lbTransportmethod);
 		
-		/*textTransportmethod = new TextField();
-		springLayout.putConstraint(SpringLayout.WEST, textTransportmethod, 6, SpringLayout.EAST, lbTransportmethod);
-		springLayout.putConstraint(SpringLayout.SOUTH, textTransportmethod, 0, SpringLayout.SOUTH, lbTransportmethod);
-		springLayout.putConstraint(SpringLayout.EAST, textTransportmethod, 111, SpringLayout.EAST, lbTransportmethod);
-		frmShoppingcart.getContentPane().add(textTransportmethod);*/
+		lbTransportmethodText = new JLabel("");
+		springLayout.putConstraint(SpringLayout.NORTH, lbTransportmethodText, 3, SpringLayout.SOUTH, rbCashondelivery);
+		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethodText, 6, SpringLayout.EAST, lbTransportmethod);
+		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethodText, 0, SpringLayout.SOUTH, lbTransportmethod);
+		frmShoppingcart.getContentPane().add(lbTransportmethodText);
 		
 		//批次數量1~5
 		comboBox.addItem(1);
@@ -162,6 +161,7 @@ public class MenuView2 {
 		comboBox.addItem(3);
 		comboBox.addItem(4);
 		comboBox.addItem(5);
+		
 		//按紐分組
 		ButtonGroup bg = new ButtonGroup();  
 		bg.add(rbBymail);
@@ -261,23 +261,47 @@ public class MenuView2 {
 	}
 	
 	//rbBymail的按鈕監聽器
-	public void RbBymailActionListener(ActionListener actionListener) {
+	public void addRbBymailActionListener(ActionListener actionListener) {
 		rbBymail.addActionListener(actionListener);
 	}
 	
 	//rbCashondelivery的按鈕監聽器
-	public void RbCashondeliveryActionListener(ActionListener actionListener){
+	public void addRbCashondeliveryActionListener(ActionListener actionListener){
 		rbCashondelivery.addActionListener(actionListener);
 	}
 	
-	//Get運送方式的按鈕方法
-	public void rbBｙmailActionPerformed(boolean b){
-		rbBymail.setEnabled(b);
-		lbTransportmethod.setText("Transport Method：郵寄");
-	}
-	public void rbCashondeliveryActionPerformed(boolean b){
-		rbCashondelivery.setEnabled(b);
-		lbTransportmethod.setText("Transport Method：貨到付款");
+	//設定運送方式的顯示文字
+	public void setTransportmethodText(String text) {
+		lbTransportmethodText.setText(text);
 	}
 	
+	//設定郵寄按鈕可否點選
+	public void setRbBymailEnabled(boolean b) {
+		rbBymail.setEnabled(b);
+	}
+	
+	//設定貨到付款按鈕可否點選
+	public void setRbCashondeliveryEnabled(boolean b) {
+		rbCashondelivery.setEnabled(b);
+	}
+	
+	//設定郵寄按鈕點選狀態
+	public void setRbBymailSelected(boolean b) {
+		rbBymail.setSelected(b);
+	}
+	
+	//設定貨到付款按鈕點選狀態
+	public void setRbCashondeliverySelected(boolean b) {
+		rbCashondelivery.setSelected(b);
+	}
+	
+	//判斷郵寄按鈕點選狀態
+	public boolean rbRbBymail_isSelected() {
+		return rbBymail.isSelected();
+	}
+	
+	//判斷貨到付款按鈕點選狀態
+	public boolean rbCashondelivery_isSelected() {
+		return rbCashondelivery.isSelected();
+	}
 }

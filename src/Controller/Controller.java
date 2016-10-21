@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionListener;
 
 import Model.CarList;
 import Model.CartItem;
-import Model.CashondeliveryPrice;
+import Model.CashOnDeliveryPrice;
 import Model.Db2;
 import Model.Iterator;
 import Model.MailPrice;
@@ -19,12 +19,10 @@ import Model.Strategy;
 import View.MenuView2;
 
 public class Controller {
-	MenuView2 menuView2;
-	ShopList shopList;
-	CarList carList;
-	Strategy strategy;
-	boolean b; 
-	private Strategy transportstrategy;
+	private MenuView2 menuView2;
+	private ShopList shopList;
+	private CarList carList;
+	private Strategy strategy;
 	
 	public Controller(MenuView2 menuView2) {
 		this.menuView2 = menuView2;
@@ -51,9 +49,9 @@ public class Controller {
 		//Exit按鈕監聽器
 		menuView2.addExitActionListener(new ExitActionListener());
 		//Bymail按鈕監聽器
-		menuView2.RbBymailActionListener(new RbBymailActionListener());
+		menuView2.addRbBymailActionListener(new RbBymailActionListener());
 		//Cashondelivery按鈕監聽器
-		menuView2.RbCashondeliveryActionListener(new RbCashondeliveryActionListener());
+		menuView2.addRbCashondeliveryActionListener(new RbCashondeliveryActionListener());
 		/*監聽器設定結束*/
 		
 		//限制<、CheckOut、Bill按鈕不能點選
@@ -150,22 +148,27 @@ public class Controller {
 	//CheckOut的按鈕動作
 	class CheckOutActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			
 			//判斷Strategy的運送方式是哪一種，再把相對應的Strategy new出來，傳進CarList
-			if(b == true){
+			if(menuView2.rbRbBymail_isSelected()){//使用者點選mail方式
 				strategy = new MailPrice();
 				carList.setStrategy(strategy);
 			}
-			else{
-				strategy = new CashondeliveryPrice();
+			else if(menuView2.rbCashondelivery_isSelected()){//使用者點選Cashondelivery方式
+				strategy = new CashOnDeliveryPrice();
 				carList.setStrategy(strategy);
+			}else{//若都沒有點選則跳出
+				String msg = "請選擇運送方式!!";
+				menuView2.showCheckOutMessage(msg);
+				return;
 			}
+			/*以下進入結帳程序*/
 			//按鈕全部關閉
 			menuView2.setButtonBuyEnabled(false);
 			menuView2.setButtonDelEnabled(false);
 			menuView2.setRemoveAllItemEnabled(false);
 			menuView2.setCheckOutEnabled(false);
-			menuView2.setBillEnabled(false);
+			menuView2.setRbBymailEnabled(false);
+			menuView2.setRbCashondeliveryEnabled(false);
 			//開始結帳
 			String msg = "The total price is " + carList.getTotalCost() + "NTD.\nThank you and come again.";
 			menuView2.showCheckOutMessage(msg);
@@ -193,7 +196,8 @@ public class Controller {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-			
+			//最後打開Bill按鈕
+			menuView2.setBillEnabled(true);
 		}
 	}
 	
@@ -203,7 +207,6 @@ public class Controller {
 			try {
 				Runtime.getRuntime().exec("cmd /c start Bill.txt");
 			} catch (IOException e1) {
-				// TODO 自動產生的 catch 區塊
 				e1.printStackTrace();
 			}
 		}
@@ -220,8 +223,7 @@ public class Controller {
 	class RbBymailActionListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			menuView2.rbBｙmailActionPerformed(true);
-			b = true;
+			menuView2.setTransportmethodText("郵寄");
 		}
 	}
 	
@@ -229,8 +231,7 @@ public class Controller {
 	class RbCashondeliveryActionListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			menuView2.rbCashondeliveryActionPerformed(true);
-			b = false;
+			menuView2.setTransportmethodText("貨到付款");
 		}
 	}
 	
