@@ -4,7 +4,21 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 public class Db2 {
-	public static ShopList readItem() {
+	private static Db2 db2;
+	private Db2(){
+	}
+	public static Db2 getProduct(){
+		if(db2 == null){
+			synchronized(Db2.class){
+				if(db2 == null){
+					db2 = new Db2();
+				}
+			}
+		}
+		return db2;
+	}
+	
+	public ShopList readItem() {
 		ShopList shopList = new ShopList();
 		ShopItem ci;
 		FileReader fr;

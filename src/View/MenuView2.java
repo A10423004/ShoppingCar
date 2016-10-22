@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SpringLayout;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JRadioButton;
-import java.awt.*;
 
 public class MenuView2 {
 	private JFrame frmShoppingcart;

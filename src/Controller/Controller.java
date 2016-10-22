@@ -23,11 +23,13 @@ public class Controller {
 	private ShopList shopList;
 	private CarList carList;
 	private Strategy strategy;
+	private Db2 db2;
 	
 	public Controller(MenuView2 menuView2) {
 		this.menuView2 = menuView2;
 		this.menuView2.show();
-		shopList = Db2.readItem();
+		db2 = Db2.getProduct();
+		shopList = db2.readItem();
 		carList = new CarList();
 		//顯示商品列表
 		loadItemList();
