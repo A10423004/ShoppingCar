@@ -44,7 +44,6 @@ public class MenuView2 {
 	private JComboBox<Integer> comboBox;
 	private JButton btnRemoveallitem;
 	private JButton btnCheckOut;
-	private JButton btnBill;
 	private JButton btnExit;
 	private JRadioButton rbBymail;//郵寄按鈕
 	private JRadioButton rbCashondelivery;//貨到付款按鈕
@@ -120,18 +119,14 @@ public class MenuView2 {
 		springLayout.putConstraint(SpringLayout.EAST, btnCheckOut, -10, SpringLayout.EAST, frmShoppingcart.getContentPane());
 		frmShoppingcart.getContentPane().add(btnCheckOut);
 		
-		btnBill = new JButton("Bill");
-		springLayout.putConstraint(SpringLayout.SOUTH, btnCheckOut, -6, SpringLayout.NORTH, btnBill);
-		springLayout.putConstraint(SpringLayout.SOUTH, btnBill, -10, SpringLayout.SOUTH, frmShoppingcart.getContentPane());
-		frmShoppingcart.getContentPane().add(btnBill);
-		
 		btnExit = new JButton("Exit");
-		springLayout.putConstraint(SpringLayout.EAST, btnBill, -6, SpringLayout.WEST, btnExit);
-		springLayout.putConstraint(SpringLayout.NORTH, btnExit, 0, SpringLayout.NORTH, btnBill);
+		springLayout.putConstraint(SpringLayout.NORTH, btnExit, 322, SpringLayout.NORTH, frmShoppingcart.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, btnCheckOut, -6, SpringLayout.NORTH, btnExit);
 		springLayout.putConstraint(SpringLayout.EAST, btnExit, 0, SpringLayout.EAST, cartList);
 		frmShoppingcart.getContentPane().add(btnExit);
 		
 		rbBymail = new JRadioButton("By mail");
+		rbBymail.setSelected(true);
 		springLayout.putConstraint(SpringLayout.EAST, rbBymail, -515, SpringLayout.EAST, frmShoppingcart.getContentPane());
 		frmShoppingcart.getContentPane().add(rbBymail);
 		
@@ -234,10 +229,6 @@ public class MenuView2 {
 	public void setCheckOutEnabled(boolean b) {
 		btnCheckOut.setEnabled(b);
 	}
-	//設定Bill可否使用
-	public void setBillEnabled(boolean b) {
-		btnBill.setEnabled(b);
-	}
 	
 	//設定CheckOut按鈕監聽器
 	public void addCheckOutActionListener(ActionListener actionListener) {
@@ -247,11 +238,6 @@ public class MenuView2 {
 	//顯示結帳訊息框
 	public void showCheckOutMessage(String msg) {
 		JOptionPane.showMessageDialog(frmShoppingcart, msg, "Check Out!", JOptionPane.INFORMATION_MESSAGE);
-	}
-	
-	//Bill按鈕監聽器
-	public void addBillActionListener(ActionListener actionListener) {
-		btnBill.addActionListener(actionListener);
 	}
 	
 	//設定Exit按鈕監聽器
