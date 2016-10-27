@@ -3,19 +3,19 @@ package Model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class Db2 {
-	private static Db2 db2;
-	private Db2(){
+public class Db {
+	private static Db db;
+	private Db(){
 	}
-	public static Db2 getProduct(){
-		if(db2 == null){
-			synchronized(Db2.class){
-				if(db2 == null){
-					db2 = new Db2();
+	public static Db getProduct(){
+		if(db == null){
+			synchronized(Db.class){
+				if(db == null){
+					db = new Db();
 				}
 			}
 		}
-		return db2;
+		return db;
 	}
 	
 	public ShopList readItem() {
@@ -26,6 +26,7 @@ public class Db2 {
 			fr = new FileReader("Item.txt");
 			BufferedReader br = new BufferedReader(fr);
 			while (br.ready()) {
+				//According "," to split Item.txt  contents
 				String[] str = br.readLine().split(",");
 				ci = new ShopItem(str[0], Double.parseDouble(str[1]));
 				shopList.add(ci);

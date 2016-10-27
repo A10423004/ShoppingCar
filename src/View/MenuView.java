@@ -15,12 +15,12 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JRadioButton;
 
-public class MenuView2 {
+public class MenuView {
 	private JFrame frmShoppingcart;
 	/**
 	 * Create the application.
 	 */
-	public MenuView2() {
+	public MenuView() {
 		initialize();
 	}
 	public void show(){
@@ -38,6 +38,8 @@ public class MenuView2 {
 	private JLabel lblPrice;
 	private JButton button_buy;
 	private JButton button_del;
+	private JButton btnBill;
+	private JButton btnNext;
 	private JLabel lblShoppingcart;
 	private DefaultListModel<String> cartModel;
 	private JList<String> cartList;
@@ -45,15 +47,15 @@ public class MenuView2 {
 	private JButton btnRemoveallitem;
 	private JButton btnCheckOut;
 	private JButton btnExit;
-	private JRadioButton rbBymail;//郵寄按鈕
-	private JRadioButton rbCashondelivery;//貨到付款按鈕
+	private JRadioButton rbBymail;//mail button
+	private JRadioButton rbCashondelivery;//Cashondelivery button
 	private JLabel lbTransportmethod;
-	private JLabel lbTransportmethodText;//運送方式顯示
+	private JLabel lbTransportmethodText;//transportmethod label
 	
 	private void initialize() {
 		frmShoppingcart = new JFrame();
-		frmShoppingcart.setTitle("ShoppingCart");
-		frmShoppingcart.setBounds(100, 100, 863, 393);
+		frmShoppingcart.setTitle("Book Orders System");
+		frmShoppingcart.setBounds(100, 100, 804, 412);
 		frmShoppingcart.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SpringLayout springLayout = new SpringLayout();
 		frmShoppingcart.getContentPane().setLayout(springLayout);
@@ -75,7 +77,8 @@ public class MenuView2 {
 		
 		lblPrice = new JLabel("Price : ");
 		springLayout.putConstraint(SpringLayout.NORTH, lblPrice, 6, SpringLayout.SOUTH, itemList);
-		springLayout.putConstraint(SpringLayout.WEST, lblPrice, 121, SpringLayout.WEST, frmShoppingcart.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, lblPrice, 75, SpringLayout.WEST, frmShoppingcart.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, lblPrice, 180, SpringLayout.WEST, frmShoppingcart.getContentPane());
 		frmShoppingcart.getContentPane().add(lblPrice);
 
 		
@@ -111,18 +114,23 @@ public class MenuView2 {
 		frmShoppingcart.getContentPane().add(comboBox);
 
 		btnRemoveallitem = new JButton("Remove All Item");
+		springLayout.putConstraint(SpringLayout.NORTH, btnRemoveallitem, 6, SpringLayout.SOUTH, cartList);
+		springLayout.putConstraint(SpringLayout.EAST, btnRemoveallitem, -251, SpringLayout.EAST, frmShoppingcart.getContentPane());
 		frmShoppingcart.getContentPane().add(btnRemoveallitem);
 		
 		btnCheckOut = new JButton("Check Out");
-		springLayout.putConstraint(SpringLayout.NORTH, btnRemoveallitem, 0, SpringLayout.NORTH, btnCheckOut);
-		springLayout.putConstraint(SpringLayout.EAST, btnRemoveallitem, -67, SpringLayout.WEST, btnCheckOut);
-		springLayout.putConstraint(SpringLayout.EAST, btnCheckOut, -10, SpringLayout.EAST, frmShoppingcart.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, btnCheckOut, 6, SpringLayout.SOUTH, cartList);
+		springLayout.putConstraint(SpringLayout.EAST, btnCheckOut, 0, SpringLayout.EAST, cartList);
 		frmShoppingcart.getContentPane().add(btnCheckOut);
 		
+		btnBill = new JButton("Bill");
+		springLayout.putConstraint(SpringLayout.NORTH, btnBill, 6, SpringLayout.SOUTH, btnCheckOut);
+		frmShoppingcart.getContentPane().add(btnBill);
+		
 		btnExit = new JButton("Exit");
-		springLayout.putConstraint(SpringLayout.NORTH, btnExit, 322, SpringLayout.NORTH, frmShoppingcart.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, btnCheckOut, -6, SpringLayout.NORTH, btnExit);
-		springLayout.putConstraint(SpringLayout.EAST, btnExit, 0, SpringLayout.EAST, cartList);
+		springLayout.putConstraint(SpringLayout.EAST, btnBill, -6, SpringLayout.WEST, btnExit);
+		springLayout.putConstraint(SpringLayout.NORTH, btnExit, 6, SpringLayout.SOUTH, btnCheckOut);
+		springLayout.putConstraint(SpringLayout.EAST, btnExit, -10, SpringLayout.EAST, frmShoppingcart.getContentPane());
 		frmShoppingcart.getContentPane().add(btnExit);
 		
 		rbBymail = new JRadioButton("By mail");
@@ -135,157 +143,182 @@ public class MenuView2 {
 		frmShoppingcart.getContentPane().add(rbCashondelivery);
 		
 		lbTransportmethod = new JLabel("Transport Method\uFF1A");
-		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethod, -31, SpringLayout.SOUTH, frmShoppingcart.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, rbCashondelivery, -3, SpringLayout.NORTH, lbTransportmethod);
 		springLayout.putConstraint(SpringLayout.SOUTH, rbBymail, -3, SpringLayout.NORTH, lbTransportmethod);
+		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethod, 10, SpringLayout.WEST, rbBymail);
+		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethod, -31, SpringLayout.SOUTH, frmShoppingcart.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, lbTransportmethod, 0, SpringLayout.EAST, rbCashondelivery);
 		springLayout.putConstraint(SpringLayout.NORTH, lbTransportmethod, 30, SpringLayout.SOUTH, cartList);
-		springLayout.putConstraint(SpringLayout.EAST, lbTransportmethod, -60, SpringLayout.EAST, rbCashondelivery);
-		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethod, 1, SpringLayout.WEST, lblShoppingcart);
 		frmShoppingcart.getContentPane().add(lbTransportmethod);
 		
 		lbTransportmethodText = new JLabel("");
 		springLayout.putConstraint(SpringLayout.NORTH, lbTransportmethodText, 3, SpringLayout.SOUTH, rbCashondelivery);
-		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethodText, 6, SpringLayout.EAST, lbTransportmethod);
-		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethodText, 0, SpringLayout.SOUTH, lbTransportmethod);
+		springLayout.putConstraint(SpringLayout.WEST, lbTransportmethodText, 331, SpringLayout.WEST, frmShoppingcart.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, lbTransportmethodText, -31, SpringLayout.SOUTH, frmShoppingcart.getContentPane());
 		frmShoppingcart.getContentPane().add(lbTransportmethodText);
 		
-		//批次數量1~5
+		btnNext = new JButton("Next Order");
+		springLayout.putConstraint(SpringLayout.SOUTH, btnNext, 0, SpringLayout.SOUTH, frmShoppingcart.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, btnNext, 0, SpringLayout.EAST, cartList);
+		frmShoppingcart.getContentPane().add(btnNext);
+		
+		//add item one to five
 		comboBox.addItem(1);
 		comboBox.addItem(2);
 		comboBox.addItem(3);
 		comboBox.addItem(4);
 		comboBox.addItem(5);
 		
-		//按紐分組
+		//radiobutton group
 		ButtonGroup bg = new ButtonGroup();  
 		bg.add(rbBymail);
 		bg.add(rbCashondelivery);
 		
 	}
-	//設計商品列表的商品資料
+	//add ShopItem content
 	public void addShopItem(String item) {
 		itemModel.addElement(item);
 	}
-	//設定商品列表的監聽器
+	//itemList actionlistener
 	public void addShopListSelectionListener(ListSelectionListener listSelectionListener) {
 		itemList.addListSelectionListener(listSelectionListener);
 	}
-	//取得目前選擇的商品清單index
+	//get the selected item index
 	public int  getSelectShopListIndex() {
 		return itemList.getSelectedIndex();
 	}
-	//設定price資訊
+	//set the price label
 	public void setShopItemPrice(Double price) {
 		lblPrice.setText("Price : " + price + " NTD");
 	}
 	
-	//設定按下>的監聽器
+	//set the button ">" acctionlistener
 	public void addButtonBuyActionListener(ActionListener actionListener) {
 		button_buy.addActionListener(actionListener);
 	}
 	
-	//取得批次數量
+	//get the combobox selected index
 	public int getSelectNum() {
 		return comboBox.getItemAt(comboBox.getSelectedIndex()).intValue();
 	}
 	
-	//清空購物車
+	//clear CarList
 	public void carListClear() {
 		cartModel.clear();
 	}
 	
-	//填入購物車
+	//load carlist item
 	public void addCarItem(String item) {
 		cartModel.addElement(item);
 	}
 	
-	//設定按下<的監聽器
+	//set button "<" actionlistener
 	public void addButtonDelActionListener(ActionListener actionListener) {
 		button_del.addActionListener(actionListener);
 	}
 	
-	//取得選擇的購物車清單index
+	//get carList selected index
 	public int getSelectCarListIndex() {
 		return cartList.getSelectedIndex();
 	}
 	
-	//設定按下RemoveAllItem的監聽器
+	//set button "RemoveAllItem" actionlistener
 	public void addRemoveAllItemActionListener(ActionListener actionListener) {
 		btnRemoveallitem.addActionListener(actionListener);
 	}
-	//設定>可否使用
+	//set button ">" visibility
 	public void setButtonBuyEnabled(boolean b) {
 		button_buy.setEnabled(b);
 	}
-	//設定<可否使用
+	//set button "<" visibility
 	public void setButtonDelEnabled(boolean b) {
 		button_del.setEnabled(b);
 	}
-	//設定RemoveAllItem可否使用
+	//set button "RemoveAllItem" visibility
 	public void setRemoveAllItemEnabled(boolean b) {
 		btnRemoveallitem.setEnabled(b);
 	}
-	//設定CheckOut可否使用
+	//set button "CheckOut" visibility
 	public void setCheckOutEnabled(boolean b) {
 		btnCheckOut.setEnabled(b);
 	}
 	
-	//設定CheckOut按鈕監聽器
+	//set button "Bill" visibility
+	public void setBillEnabled(boolean b) {
+		btnBill.setEnabled(b);
+	}
+	
+	//set button "Next Order" visibility
+	public void setNextEnabled(boolean b){
+		btnNext.setEnabled(b);
+	}
+		
+	//set button "Bill" actionlistener
+	public void addBillActionListener(ActionListener actionListener) {
+		btnBill.addActionListener(actionListener);
+	}
+	
+	//set button "Next Order" actionlistener
+	public void addNextActionListener(ActionListener actionListener){
+		btnNext.addActionListener(actionListener);
+	}
+	
+	//set button "CheckOut" actionlistener
 	public void addCheckOutActionListener(ActionListener actionListener) {
 		btnCheckOut.addActionListener(actionListener);
 	}
 	
-	//顯示結帳訊息框
+	//Show checkout message
 	public void showCheckOutMessage(String msg) {
 		JOptionPane.showMessageDialog(frmShoppingcart, msg, "Check Out!", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	//設定Exit按鈕監聽器
+	//set button "Exit" actionlistener
 	public void addExitActionListener(ActionListener actionListener) {
 		btnExit.addActionListener(actionListener);
 	}
 	
-	//rbBymail的按鈕監聽器
+	//set button "By mail" actionlistener
 	public void addRbBymailActionListener(ActionListener actionListener) {
 		rbBymail.addActionListener(actionListener);
 	}
 	
-	//rbCashondelivery的按鈕監聽器
+	//set button "Cash on delivery" actionlistener
 	public void addRbCashondeliveryActionListener(ActionListener actionListener){
 		rbCashondelivery.addActionListener(actionListener);
 	}
 	
-	//設定運送方式的顯示文字
+	//set label "TransportmethodText" text
 	public void setTransportmethodText(String text) {
 		lbTransportmethodText.setText(text);
 	}
 	
-	//設定郵寄按鈕可否點選
+	//set button "By mail" visibility
 	public void setRbBymailEnabled(boolean b) {
 		rbBymail.setEnabled(b);
 	}
 	
-	//設定貨到付款按鈕可否點選
+	//set button "Cash on delivery" visibility
 	public void setRbCashondeliveryEnabled(boolean b) {
 		rbCashondelivery.setEnabled(b);
 	}
 	
-	//設定郵寄按鈕點選狀態
+	//set radiobutton "By mail" isselected
 	public void setRbBymailSelected(boolean b) {
 		rbBymail.setSelected(b);
 	}
 	
-	//設定貨到付款按鈕點選狀態
+	//set radiobutton "Cash on delivery" isselected
 	public void setRbCashondeliverySelected(boolean b) {
 		rbCashondelivery.setSelected(b);
 	}
 	
-	//判斷郵寄按鈕點選狀態
+	//Check button "By mail" isselected
 	public boolean rbRbBymail_isSelected() {
 		return rbBymail.isSelected();
 	}
 	
-	//判斷貨到付款按鈕點選狀態
+	//Check button "Cash on delivery" isselected
 	public boolean rbCashondelivery_isSelected() {
 		return rbCashondelivery.isSelected();
 	}

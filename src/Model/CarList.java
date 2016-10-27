@@ -19,15 +19,14 @@ public class CarList implements List{
 		}
 		list.add((CartItem)item);
 	}
+	
+	//Polymorphism，assign the remove item
 	public Item remove(int index) {
 		CartItem item = list.get(index);
 		list.remove(index);
 		return item;
 	}
-	public void removeAll() {
-		list.clear();
-	}
-	//多型，指定要刪除幾個Item
+	
 	public Item remove(int index, int num) {
 		try {
 			CartItem item = list.get(index);
@@ -41,6 +40,11 @@ public class CarList implements List{
 			return null;
 		}
 	}
+	
+	public void removeAll() {
+		list.clear();
+	}
+	
 	public int getLength() {
 		return list.size();
 	}
@@ -50,7 +54,7 @@ public class CarList implements List{
 	public Iterator iterator() {
 		return new CartListIterator(this);
 	}
-	//算總價錢
+	//compute TotalCost
 	public double getTotalCost() {
 		double total = 0.0;
 		try{
@@ -65,11 +69,11 @@ public class CarList implements List{
 			return (Double) null;
 		}
 	}
-	//set設置Strategy的方法
+	//set strategy function
 	public void setStrategy(Strategy s){
 		this.strategy = s;
 	}
-	//get取得Strategy的getTransportPrice()方法
+	//get Strategy price
 	public double getStrategy(){
 		return strategy.getTransportPrice();
 	}

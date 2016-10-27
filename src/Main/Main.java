@@ -1,11 +1,11 @@
 package Main;
 
 import Controller.Controller;
-import View.MenuView2;
+import View.MenuView;
 
 public class Main {
 	public static void main(String[] args) {
-		MenuView2 mv = new MenuView2();
+		MenuView mv = new MenuView();
 		Controller controller = new Controller(mv);
 	}
 }

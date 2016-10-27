@@ -10,70 +10,78 @@ import javax.swing.event.ListSelectionListener;
 
 import Model.CarList;
 import Model.CartItem;
+import Model.CartListIterator;
 import Model.CashOnDeliveryPrice;
-import Model.Db2;
+import Model.Db;
 import Model.Iterator;
 import Model.MailPrice;
 import Model.ShopList;
 import Model.Strategy;
-import View.MenuView2;
+import View.MenuView;
 
 public class Controller {
-	private MenuView2 menuView2;
+	private MenuView menuView;
 	private ShopList shopList;
 	private CarList carList;
 	private Strategy strategy;
-	private Db2 shopping;
+	private Db shopping;
 	
-	public Controller(MenuView2 menuView2) {
-		this.menuView2 = menuView2;
-		this.menuView2.show();
-		shopping = Db2.getProduct();
+	public Controller(MenuView menuView) {
+		this.menuView = menuView;
+		this.menuView.show();
+		//read the item list from "Item.txt"
+		shopping = Db.getProduct();
 		shopList = shopping.readItem();
 		carList = new CarList();
-		menuView2.setTransportmethodText("郵寄");
-		//顯示商品列表
+		//set default transport method
+		menuView.setTransportmethodText("郵寄");
+		//load ShopItem list
 		loadItemList();
-		//顯示購物車標頭
+		//show CarItem list
 		showCarItems();
-		/*以下為監聽器設定*/
+		/*actionlistener setting*/
 		//商品清單監聽器
-		menuView2.addShopListSelectionListener(new ShopListSelectionListener());
+		menuView.addShopListSelectionListener(new ShopListSelectionListener());
 		//>按鈕監聽器
-		menuView2.addButtonBuyActionListener(new ButtonBuyActionListener());
+		menuView.addButtonBuyActionListener(new ButtonBuyActionListener());
 		//<按鈕監聽器
-		menuView2.addButtonDelActionListener(new ButtonDelActionListener());
+		menuView.addButtonDelActionListener(new ButtonDelActionListener());
+		//Bill按鈕監聽器
+		menuView.addBillActionListener(new BillActionListener());
 		//RemoveAllItem按鈕監聽器
-		menuView2.addRemoveAllItemActionListener(new RemoveAllItemActionListener());
+		menuView.addRemoveAllItemActionListener(new RemoveAllItemActionListener());
 		//CheckOut按鈕監聽器
-		menuView2.addCheckOutActionListener(new CheckOutActionListener());
+		menuView.addCheckOutActionListener(new CheckOutActionListener());
 		//Exit按鈕監聽器
-		menuView2.addExitActionListener(new ExitActionListener());
+		menuView.addExitActionListener(new ExitActionListener());
+		//Next按鈕監聽器
+		menuView.addNextActionListener(new NextActionListener());
 		//Bymail按鈕監聽器
-		menuView2.addRbBymailActionListener(new RbBymailActionListener());
+		menuView.addRbBymailActionListener(new RbBymailActionListener());
 		//Cashondelivery按鈕監聽器
-		menuView2.addRbCashondeliveryActionListener(new RbCashondeliveryActionListener());
+		menuView.addRbCashondeliveryActionListener(new RbCashondeliveryActionListener());
 		/*監聽器設定結束*/
-		
-		//限制<、CheckOut按鈕不能點選
-		menuView2.setButtonDelEnabled(false);
-		menuView2.setCheckOutEnabled(false);
-		}
-	
-	//載入商品清單
-	private void loadItemList() {
+		//sert "<、CheckOut、Bill" visibility false
+		menuView.setNextEnabled(false);
+		menuView.setButtonDelEnabled(false);
+		menuView.setCheckOutEnabled(false);
+		menuView.setBillEnabled(false);
+	}
+	//load item list
+	public void loadItemList() {
 		Iterator iterator = shopList.iterator();
 		while(iterator.hasNext()){
-			menuView2.addShopItem(iterator.Next().getName());
+			menuView.addShopItem(iterator.Next().getName());
 		}
 	}
 	
 	//設定商品列表的監聽器
 	class ShopListSelectionListener implements ListSelectionListener{
 		public void valueChanged(ListSelectionEvent e) {
-			//如果按到奇怪的index就不要顯示
-			if(menuView2.getSelectShopListIndex() >= 0){
-				menuView2.setShopItemPrice(shopList.getItemAt(menuView2.getSelectShopListIndex()).getPrice());
+			
+			if(menuView.getSelectShopListIndex() >= 0){
+				//show shop item price which is selected
+				menuView.setShopItemPrice(shopList.getItemAt(menuView.getSelectShopListIndex()).getPrice());
 			}
 		}
 	}
@@ -81,29 +89,28 @@ public class Controller {
 	//按下>購買的動作監聽器
 	class ButtonBuyActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			int selectIndex = menuView2.getSelectShopListIndex();
-			//有按在項目欄才有動作
+			int selectIndex = menuView.getSelectShopListIndex();
 			if(selectIndex >= 0){
 				String itemName = shopList.getItemAt(selectIndex).getName();
-				int num = menuView2.getSelectNum();
+				int num = menuView.getSelectNum();
 				double price = shopList.getItemAt(selectIndex).getPrice();
 				carList.add(new CartItem(itemName, num, price));
-				//更新購物車畫面
+				//update carItem list
 				showCarItems();
-				//打開<、CheckOut按鈕供點選
-				menuView2.setButtonDelEnabled(true);
-				menuView2.setCheckOutEnabled(true);
+				//set "<, Checkout" visibility true
+				menuView.setButtonDelEnabled(true);
+				menuView.setCheckOutEnabled(true);
 			}
 		}
 	}
 	
-	//更新購物車清單
+	//update carItem list
 	public void showCarItems() {
 		//先清空購物車
-		menuView2.carListClear();
+		menuView.carListClear();
 		//然後填入項目
-		menuView2.addCarItem("No.|                Item Name|  Quantity|    Price|    Subtotal");
-		menuView2.addCarItem("---+-------------------------+----------+---------+-----------+\n");
+		menuView.addCarItem("No.|                Item Name|  Quantity|    Price|    Subtotal");
+		menuView.addCarItem("---+-------------------------+----------+---------+-----------+\n");
 		Iterator iterator = carList.iterator();
 		int i = 0;
 		while(iterator.hasNext()){
@@ -111,7 +118,7 @@ public class Controller {
 			String name = cartItem.getName();
 			int quantity = cartItem.getQuantity();
 			double price = cartItem.getPrice();
-			menuView2.addCarItem(String.format("%3d|%25s|%10d|%9.2f|%12.2f\n", i + 1, name, quantity, price, quantity * price));
+			menuView.addCarItem(String.format("%3d|%25s|%10d|%9.2f|%12.2f\n", i + 1, name, quantity, price, quantity * price));
 			i++;
 		}
 	}
@@ -119,17 +126,16 @@ public class Controller {
 	//按下<刪除的動作監聽器
 	class ButtonDelActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			int selectIndex = menuView2.getSelectCarListIndex() - 2;
-			int num = menuView2.getSelectNum();
-			//按在標頭欄無動作，按在項目欄才有動作
+			int selectIndex = menuView.getSelectCarListIndex() - 2;
+			int num = menuView.getSelectNum();
 			if(selectIndex >= 0){
 				carList.remove(selectIndex, num);
 				//更新購物車畫面
 				showCarItems();
-				//如果刪光了就不能再刪除與結帳了
+				//if carlist have nothing, then set "<, checkout" visibility false
 				if(carList.getLength() == 0){
-					menuView2.setButtonDelEnabled(false);
-					menuView2.setCheckOutEnabled(false);
+					menuView.setButtonDelEnabled(false);
+					menuView.setCheckOutEnabled(false);
 				}
 			}
 		}
@@ -140,8 +146,8 @@ public class Controller {
 		public void actionPerformed(ActionEvent e) {
 			carList.removeAll();
 			showCarItems();
-			menuView2.setButtonDelEnabled(false);
-			menuView2.setCheckOutEnabled(false);
+			menuView.setButtonDelEnabled(false);
+			menuView.setCheckOutEnabled(false);
 		}
 	}
 	
@@ -149,11 +155,13 @@ public class Controller {
 	class CheckOutActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			
-			
-			//判斷Strategy的運送方式是哪一種，再把相對應的Strategy new出來，傳進CarList
-			if(menuView2.rbRbBymail_isSelected()){//使用者點選mail方式
+			menuView.setNextEnabled(true);
+			menuView.setBillEnabled(true);
+			//To decide which strategy user select, then set strategy to user selected and pass strategy to carlist
+			if(menuView.rbRbBymail_isSelected()){//使用者點選mail方式
 				strategy = new MailPrice();
 				carList.setStrategy(strategy);
+				
 			}
 			else{//使用者點選Cashondelivery方式
 				strategy = new CashOnDeliveryPrice();
@@ -164,10 +172,10 @@ public class Controller {
 			//開始結帳
 			
 			String msg = "The total price is " + carList.getTotalCost() + "NTD.\nThank you and come again.";
-			menuView2.showCheckOutMessage(msg);
+			menuView.showCheckOutMessage(msg);
 			String str = "";
-			str += "No.|                Item Name|  Quantity|    Price|    Subtotal\n";
-			str += "---+-------------------------+----------+---------+------------\n";
+			str += "No.|            Item Name|  Quantity|    Price|    Subtotal|\n";
+			str += "---+-----------------------+----------+---------+------------\n";
 			Iterator iterator = carList.iterator();
 			int i = 0;
 			while(iterator.hasNext()){
@@ -175,11 +183,13 @@ public class Controller {
 				String name = cartItem.getName();
 				int quantity = cartItem.getQuantity();
 				double price = cartItem.getPrice();
-				str += String.format("%3d|%25s|%10d|%9.2f|%12.2f\n", i, name, quantity, price, quantity * price);
+				
+				str += String.format("%3d|%21s|%10d|%9.2f|%12.2f\n", i, name, quantity, price, quantity * price);
 				i++;
 			}
-			str += "---+-------------------------+----------+---------+------------\n";
-			str += String.format("Total: %.2f\n", carList.getTotalCost());
+			double transprice = carList.getStrategy();
+			str += "---+-----------------------+----------+---------+------------\n";
+			str += String.format("Transportprice: %.2f\nTotal: %.2f\n",transprice, carList.getTotalCost());
 			try {
 				FileWriter fw = new FileWriter("Bill.txt");
 				fw.write(str);
@@ -189,25 +199,31 @@ public class Controller {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-			
-			
-			//按鈕全部關閉
-			shopping = Db2.getProduct();
-			menuView2.setButtonBuyEnabled(true);
-			menuView2.setButtonDelEnabled(true);
-			menuView2.setRemoveAllItemEnabled(true);
-			menuView2.setCheckOutEnabled(false);
-			menuView2.setRbBymailEnabled(true);
-			menuView2.setRbCashondeliveryEnabled(true);
-			menuView2.setRbBymailSelected(true);
-			menuView2.setTransportmethodText("郵寄");
-			carList.removeAll();
-			showCarItems();
-			
-			
 		}
 	}
 	
+	
+	//Next按鈕動作
+	class NextActionListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			//start new view and close the older view
+			MenuView newMenuView = new MenuView();
+			menuView.hide();
+			Controller newController = new Controller(newMenuView);
+		}
+	}
+		
+	//Bill按鈕動作
+	class BillActionListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			try {
+				Runtime.getRuntime().exec("cmd /c start Bill.txt");
+			} catch (IOException e1) {
+				// TODO 自動產生的 catch 區塊
+				e1.printStackTrace();
+			}
+		}
+	}
 	
 	//Exit按鈕動作
 	class ExitActionListener implements ActionListener{
@@ -220,7 +236,7 @@ public class Controller {
 	class RbBymailActionListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			menuView2.setTransportmethodText("郵寄");
+			menuView.setTransportmethodText("郵寄");
 		}
 	}
 	
@@ -228,7 +244,7 @@ public class Controller {
 	class RbCashondeliveryActionListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			menuView2.setTransportmethodText("貨到付款");
+			menuView.setTransportmethodText("貨到付款");
 		}
 	}
 	
